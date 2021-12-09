@@ -1,12 +1,40 @@
 """Restaurant rating lister."""
 
 import random
+import os, sys
 
-def read_ratings():
+def get_files():
+    """Gets text files from current directory"""
+
+    text_files = []
+    all_files = (os.listdir('.'))
+
+    # Adds valid text files to text_files array
+    for filename in all_files:
+        if os.path.isfile(filename) and filename[-3:] == 'txt':
+            text_files.append(filename)
+
+    return text_files
+
+
+def select_file(files):
+    """Allows user to select which file they want to use"""
+
+    # Print text files in directory
+    print('The current text files in the directory are:')
+    for idx, filename in enumerate(files):
+        print(idx + 1, ': ', filename, sep='')
+
+    # Get user input
+    choice = int(input('Your file choice: '))
+    return files[choice - 1]
+
+
+def read_ratings(file):
     """Reads text file and creates dictionary in the format of restuarant:rating"""
     ratings = {}
 
-    file = open('./scores.txt', 'r')
+    file = open(file, 'r')
 
     for line in file:
         line = line.strip('\n')
@@ -93,26 +121,36 @@ def display_choices():
 
     return choice
 
+def main():
 
-# Read text file and create dictionary of restuarant: rating
-ratings = read_ratings()
+    # Get files
+    all_text_files = get_files()
+    if not all_text_files:
+        sys.exit()
 
-# Prompt the user for action choice
-while True:
-    choice = display_choices()    
+    # Select file to use
+    file_choice = select_file(all_text_files)
 
-    if choice == '1':
-        print('\n')
-        print_ratings(ratings)
-    elif choice == '2':
-        add_rating(ratings)
-    elif choice == '3':
-        update_random_rating(ratings)
-    elif choice == '4':
-        update_chosen_rating(ratings)
-    elif choice == '5':
-        print('Goodbye!')
-        break
-    else:
-        print('I didn\'t get that. Please try again!')
+    # Read text file and create dictionary of restuarant: rating
+    ratings = read_ratings(file_choice)
 
+    # Prompt the user for action choice
+    while True:
+        choice = display_choices()    
+
+        if choice == '1':
+            print_ratings(ratings)
+        elif choice == '2':
+            add_rating(ratings)
+        elif choice == '3':
+            update_random_rating(ratings)
+        elif choice == '4':
+            update_chosen_rating(ratings)
+        elif choice == '5':
+            print('Goodbye!')
+            break
+        else:
+            print('I didn\'t get that. Please try again!')
+
+
+main()
