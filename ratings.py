@@ -1,5 +1,7 @@
 """Restaurant rating lister."""
 
+import random
+
 def read_ratings():
     """Reads text file and creates dictionary in the format of restuarant:rating"""
     ratings = {}
@@ -30,10 +32,18 @@ def add_rating(d):
     d[new_rest] = int(new_rating)
 
 
+def update_rating(d):
+    """Allows user to update a random rating from a dictionary"""
+    choice = random.choice(list(d.keys()))
+    print('\nThe randomly chosen restaurant is', choice)
+    new_rating = int(input('Enter a new rating for ' + choice + ': '))
+    d[choice] = new_rating
+
+
 def print_ratings(d):
     """Prints the restaurants/ratings in alphabetical order"""
 
-    for restaurant, rating in sorted(ratings.items()):
+    for restaurant, rating in sorted(d.items()):
         print(f'{restaurant} is rated at {rating}.')
 
 
@@ -43,14 +53,17 @@ ratings = read_ratings()
 # Prompt the user for action choice
 while True:
     print('\nWhat action would you like to perform?')
-    print('Enter \'add\' to enter a new restaurant/rating, \'print\' to see all restaurants and ratings, or \'quit\' to quit.')
-    choice = input('Your choice: ')
+    print('\'add\' a new restaurant and rating, \'see\' all ratings, \'update\' a random rating, or \'quit\'.')
+    choice = input('Your choice: ').lower()
 
-    if choice.lower() == 'add':
+    if choice == 'add':
         add_rating(ratings)
         continue
-    elif choice.lower() == 'print':
+    elif choice == 'see':
         print_ratings(ratings)
+        continue
+    elif choice == 'update':
+        update_rating(ratings)
         continue
     else:
         print('Thanks for your time! Have a nice day :)')
